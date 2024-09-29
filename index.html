@@ -4,9 +4,30 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>ZapGenius</title>
+
+  <!-- Adicionando o Firebase SDK -->
+  <script src="https://www.gstatic.com/firebasejs/10.13.2/firebase-app.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.13.2/firebase-analytics.js"></script>
+
+  <script>
+    // Configuração do Firebase
+    const firebaseConfig = {
+      apiKey: "AIzaSyC-h05z6JI0G3Ha2VsfSm8KeylqJw7hBT8",
+      authDomain: "zapgenius-21e7a.firebaseapp.com",
+      projectId: "zapgenius-21e7a",
+      storageBucket: "zapgenius-21e7a.appspot.com",
+      messagingSenderId: "605600640847",
+      appId: "1:605600640847:web:fce886f55ef53636a39f3a",
+      measurementId: "G-727QV9YGRD"
+    };
+
+    // Inicializando o Firebase
+    firebase.initializeApp(firebaseConfig);
+    firebase.analytics();
+  </script>
 </head>
 <body>
   <h1>Bem-vindo ao ZapGenius!</h1>
-  <p>Esta é a página inicial do projeto ZapGenius.</p>
+  <p>Firebase está integrado com sucesso ao site.</p>
 </body>
 </html>
