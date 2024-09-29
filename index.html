@@ -5,12 +5,14 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>ZapGenius</title>
 
-  <!-- Adicionando o Firebase SDK compatível com sites estáticos -->
+  <!-- Firebase SDK -->
   <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-auth.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-firestore.js"></script>
   <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-analytics.js"></script>
 
   <script>
-    // Sua configuração do Firebase
+    // Configuração do Firebase
     var firebaseConfig = {
       apiKey: "AIzaSyC-h05z6JI0G3Ha2VsfSm8KeylqJw7hBT8",
       authDomain: "zapgenius-21e7a.firebaseapp.com",
@@ -21,13 +23,90 @@
       measurementId: "G-727QV9YGRD"
     };
 
-    // Inicializando o Firebase
+    // Inicializando Firebase
     firebase.initializeApp(firebaseConfig);
     firebase.analytics();
+    var db = firebase.firestore();
   </script>
 </head>
 <body>
   <h1>Bem-vindo ao ZapGenius!</h1>
-  <p>Firebase está integrado com sucesso ao site.</p>
+
+  <!-- Formulário de Login -->
+  <div id="login-form">
+    <h2>Login</h2>
+    <input type="email" id="email" placeholder="Digite seu e-mail">
+    <input type="password" id="password" placeholder="Digite sua senha">
+    <button onclick="login()">Entrar</button>
+  </div>
+
+  <!-- Formulário de Registro -->
+  <div id="register-form">
+    <h2>Registrar-se</h2>
+    <input type="email" id="register-email" placeholder="Digite seu e-mail">
+    <input type="password" id="register-password" placeholder="Digite sua senha">
+    <button onclick="register()">Registrar</button>
+  </div>
+
+  <!-- Scripts de Autenticação -->
+  <script>
+    // Função de Login
+    function login() {
+      var email = document.getElementById('email').value;
+      var password = document.getElementById('password').value;
+
+      firebase.auth().signInWithEmailAndPassword(email, password)
+        .then((userCredential) => {
+          var user = userCredential.user;
+          alert("Login realizado com sucesso: " + user.email);
+        })
+        .catch((error) => {
+          var errorMessage = error.message;
+          alert("Erro: " + errorMessage);
+        });
+    }
+
+    // Função de Registro
+    function register() {
+      var email = document.getElementById('register-email').value;
+      var password = document.getElementById('register-password').value;
+
+      firebase.auth().createUserWithEmailAndPassword(email, password)
+        .then((userCredential) => {
+          var user = userCredential.user;
+          alert("Usuário registrado com sucesso: " + user.email);
+        })
+        .catch((error) => {
+          var errorMessage = error.message;
+          alert("Erro: " + errorMessage);
+        });
+    }
+  </script>
+
+  <!-- Funções Firestore -->
+  <script>
+    // Função para adicionar uma mensagem ao Firestore
+    function addMessage() {
+      db.collection("messages").add({
+        user: firebase.auth().currentUser.email,
+        message: "Essa é uma mensagem de teste",
+        timestamp: firebase.firestore.FieldValue.serverTimestamp()
+      })
+      .then((docRef) => {
+        console.log("Mensagem adicionada com ID: ", docRef.id);
+      })
+      .catch((error) => {
+        console.error("Erro ao adicionar mensagem: ", error);
+      });
+    }
+
+    // Exemplo: Adicionar mensagem quando logado
+    firebase.auth().onAuthStateChanged((user) => {
+      if (user) {
+        // Usuário está logado, adicionar uma mensagem
+        addMessage();
+      }
+    });
+  </script>
 </body>
 </html>
